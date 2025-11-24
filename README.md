@@ -1,8 +1,8 @@
-# langgraph-react
+# openai-agents-sdk-react
 
 Bootstrap that runs:
 
-- **LangGraph**
+- **OpenAI Agents SDK**
 - **FastAPI WebSocket server**
 - **React client (Next.js)**
 - **Langfuse** (web UI + ClickHouse + Postgres + Redis + MinIO)
@@ -55,10 +55,10 @@ docker compose up
 - navigate in a browser window to Langfuse at http://localhost:3000 and "Sign up" for a new Langfuse account (create local account)
 - create New Organization
 - add Organization members
-- create New Project "langgraph-react"
+- create New Project "openai-agents-sdk-react"
 - Configure tracing -> Create new API key
 - Copy Secret Key and Public Key to /modules/agent/.env PUBLIC_KEY and SECRET_KEY.. and maintain LANGFUSE_HOST="http://langfuse:3000"
-- In order to capture these keys in the `agent` container, recreate the `agent` container.. open a new WSL2 window, navigate to `langgraph-react` directory and run
+- In order to capture these keys in the `agent` container, recreate the `agent` container.. open a new WSL2 window, navigate to `openai-agents-sdk-react` directory and run
 
 ```bash
 docker compose up -d --no-deps --force-recreate agent
@@ -76,24 +76,17 @@ langfuse-worker-1  | 2025-10-23T23:34:33.552Z info      Starting ClickhouseWrite
 
 - navigate to Langfuse at http://localhost:3000
 - Select `Tracing` and you should see a Timestamped trace displayed for the most recent message in the chat
-- Success! ✅🏆🎯💯🚀🎯 `langgraph-react` is working with self-hosted Langfuse observability tracing.
+- Success! `openai-agents-sdk-react` is working with self-hosted Langfuse observability tracing.
 
 ## 5) What's running (ports)
 
 | Service                       | URL / Port             | Notes                                                      |
 | ----------------------------- | ---------------------- | ---------------------------------------------------------- |
-| LangGraph API (dev)           | http://localhost:2024  | OpenAPI docs at `/docs`.                                   |
 | FastAPI WebSocket server      | ws://localhost:8000/ws | React client connects here for streaming tokens.           |
 | React client (Next.js)        | http://localhost:3001  | Chat UI that talks to the WS server.                       |
 | Langfuse Web                  | http://localhost:3000  | UI for traces; initialize on first run.                    |
 | MinIO (S3 API)                | http://localhost:9090  | Used by Langfuse for storage.                              |
 | Postgres / ClickHouse / Redis | _loopback only_        | Bound to `127.0.0.1` inside Compose; not publicly exposed. |
-
----
-
-### LangGraph API
-
-- Open http://localhost:2024/docs for the dev API docs.
 
 ---
 
