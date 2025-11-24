@@ -21,7 +21,7 @@ class Orchestrator:
         self.agent = Agent(
             name="Orchestrator",
             instructions=ORCHESTRATOR_SYSTEM_PROMPT,
-            model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
+            model=os.getenv("OPENAI_MODEL", "gpt-5-chat-latest"),
             output_type=AgentOutputSchema(OrchestratorDecision, strict_json_schema=False),
         )
         self.evaluator = Evaluator()

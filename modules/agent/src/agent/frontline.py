@@ -16,7 +16,7 @@ class Frontline:
         self.agent = Agent(
             name="Frontline",
             instructions=FRONTLINE_SYSTEM_PROMPT,
-            model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
+            model=os.getenv("OPENAI_MODEL", "gpt-5-chat-latest"),
         )
 
     async def process(
