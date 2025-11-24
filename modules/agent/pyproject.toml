@@ -15,6 +15,9 @@ dependencies = [
   "fastapi>=0.119.1,<1",
   "uvicorn>=0.38,<1",
   "websockets>=15,<16",
+  "pydantic>=2.0,<3",
+  "sendgrid>=6.0,<7",
+  "google-search-results>=2.4,<3",
 ]
 
 
