@@ -5,7 +5,6 @@ Bootstrap that runs:
 - **OpenAI Agents SDK**
 - **FastAPI WebSocket server**
 - **React client (Next.js)**
-- **Langfuse** (web UI + ClickHouse + Postgres + Redis + MinIO)
 
 Everything is wired together with **Docker Compose**.
 
@@ -20,27 +19,17 @@ Everything is wired together with **Docker Compose**.
 
 ## 1) Environment variables
 
-There are **two places** to configure env vars.
-
-### A) Root env (for Docker Compose + Langfuse stack)
-
 Create a root `.env` from the example and fill any `# CHANGEME` values:
 
 ```bash
 cp .env.example .env
 ```
 
-### B) Agent env
+Set your OpenAI API key in `modules/agent/.env`:
 
-#### modules/agent/.env
-
+```
 OPENAI_API_KEY=sk-...
-
-#### Leave Langfuse PUBLIC_KEY and SECRET_KEY blank until step 3 below is completed
-
-LANGFUSE_PUBLIC_KEY=...
-LANGFUSE_SECRET_KEY=...
-LANGFUSE_HOST=http://langfuse:3000
+```
 
 ---
 
@@ -50,48 +39,14 @@ LANGFUSE_HOST=http://langfuse:3000
 docker compose up
 ```
 
-## 3) Create Langfuse credentials
-
-- navigate in a browser window to Langfuse at http://localhost:3000 and "Sign up" for a new Langfuse account (create local account)
-- create New Organization
-- add Organization members
-- create New Project "openai-agents-sdk-react"
-- Configure tracing -> Create new API key
-- Copy Secret Key and Public Key to /modules/agent/.env PUBLIC_KEY and SECRET_KEY.. and maintain LANGFUSE_HOST="http://langfuse:3000"
-- In order to capture these keys in the `agent` container, recreate the `agent` container.. open a new WSL2 window, navigate to `openai-agents-sdk-react` directory and run
-
-```bash
-docker compose up -d --no-deps --force-recreate agent
-```
-
-## 4) Test everything is working
+## 3) Test everything is working
 
 - Open http://localhost:3001
 - Send a message. You should see **User** bubble on the **right**, **Bot** streaming response on the **left**
-- check the container log output.. it should emit something like
 
-```bash
-langfuse-worker-1  | 2025-10-23T23:34:33.552Z info      Starting ClickhouseWriter. Max interval: 1000 ms, Max batch size: 1000
-```
+## 4) What's running (ports)
 
-- navigate to Langfuse at http://localhost:3000
-- Select `Tracing` and you should see a Timestamped trace displayed for the most recent message in the chat
-- Success! `openai-agents-sdk-react` is working with self-hosted Langfuse observability tracing.
-
-## 5) What's running (ports)
-
-| Service                       | URL / Port             | Notes                                                      |
-| ----------------------------- | ---------------------- | ---------------------------------------------------------- |
-| FastAPI WebSocket server      | ws://localhost:8000/ws | React client connects here for streaming tokens.           |
-| React client (Next.js)        | http://localhost:3001  | Chat UI that talks to the WS server.                       |
-| Langfuse Web                  | http://localhost:3000  | UI for traces; initialize on first run.                    |
-| MinIO (S3 API)                | http://localhost:9090  | Used by Langfuse for storage.                              |
-| Postgres / ClickHouse / Redis | _loopback only_        | Bound to `127.0.0.1` inside Compose; not publicly exposed. |
-
----
-
-### Langfuse UI
-
-- Open http://localhost:3000
-- Complete the initial setup
-- Watch traces populate as you chat from the client
+| Service                  | URL / Port             | Notes                                    |
+| ------------------------ | ---------------------- | ---------------------------------------- |
+| FastAPI WebSocket server | ws://localhost:8000/ws | React client connects here for streaming |
+| React client (Next.js)   | http://localhost:3001  | Chat UI that talks to the WS server      |
